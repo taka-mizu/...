@@ -15,9 +15,24 @@ export class Stage {
     this.createNewLayer('')
   }
 
+  changeSize({
+    pxWidth = this.pxWidth,
+    pxHeight = this.pxHeight,
+    width = this.width,
+    height = this.height
+  }) {
+    this.pxWidth = pxWidth
+    this.pxHeight = pxHeight
+
+    this.width = width
+    this.height = height
+
+    this.canvasWidth = this.width * this.pxWidth
+    this.canvasHeight = this.height * this.pxHeight
+  }
+
   createNewLayer(color = '') {
     this.layers.splice(this.layerNum + 1, 0, {});
-    console.log(this.layers);
     this.layerNum += 1
     this.changeVisible({})
     this.changeBlendMode({})
@@ -113,14 +128,6 @@ export class Stage {
   }) {
     this.pxWidth = pxWidth
     this.pxHeight = pxHeight
-  }
-
-  changeSize({
-    width = this.width,
-    height = this.height
-  }) {
-    this.canvasWidth = width * this.pxWidth
-    this.canvasHeight = height * this.pxHeight
   }
 
   setLayer({layerNum = this.layerNum}) {

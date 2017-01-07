@@ -49,6 +49,7 @@ export class OekakiCanvas extends React.Component {
 					oekaki={oekaki}
 					handleEraser={::this.handleEraser}
 					handlePencil={::this.handlePencil}
+					handleZoom={::this.handleZoom}
 				/>
 
 				<div className={styles.stage}>
@@ -112,9 +113,7 @@ export class OekakiCanvas extends React.Component {
 			stage.changeLayers({layers:
 				JSON.parse(decodeURI(inflateSearch.replace(/%23/g,'#')))
 			})
-			mini.changeLayers({layers:
-				JSON.parse(decodeURI(inflateSearch.replace(/%23/g,'#')))
-			})
+			mini.changeLayers({layers: stage.layers})
 		}
 		const miniOekaki = new Oekaki({
 			stage: mini
@@ -131,18 +130,6 @@ export class OekakiCanvas extends React.Component {
 			}
 		});
 
-		const {
-			changeStage,
-			changeMini,
-			changeOekaki,
-			changeMiniOekaki
-			} = this.props.OekakiCanvasActions
-
-		changeStage(stage)
-		changeMini(mini)
-		changeOekaki(oekaki)
-		changeMiniOekaki(miniOekaki)
-
 		oekaki.load()
 		miniOekaki.load()
 
@@ -152,6 +139,17 @@ export class OekakiCanvas extends React.Component {
 			oekaki.changeHistory(JSON.parse(localStorage['draw']))
 			//oekaki.repeat({});
 		}
+
+		const {
+			changeStage,
+			changeMini,
+			changeOekaki,
+			changeMiniOekaki
+		} = this.props.OekakiCanvasActions
+		changeStage(stage)
+		changeMini(mini)
+		changeOekaki(oekaki)
+		changeMiniOekaki(miniOekaki)
 	}
 
 	handleChangeLayers(layers) {
@@ -194,8 +192,18 @@ export class OekakiCanvas extends React.Component {
 
 	handlePencil() {
 		const oekaki = this.props.oekaki;
-		console.log(oekaki.color);
 		oekaki.changeFillStyle({fillStyle: oekaki.color})
+	}
+
+	handleZoom(isIn) {
+		const stage = this.props.stage;
+		stage.changeSize({
+			pxWidth: Math.floor(isIn ? stage.pxWidth * 1.5 : stage.pxWidth / 1.5),
+			pxHeight: Math.floor(isIn ? stage.pxHeight * 1.5 : stage.pxHeight / 1.5),
+		})
+		stage.setLayer({})
+		this.updateCanvas()
+		this.props.OekakiCanvasActions.changeStage(stage)
 	}
 
 	handleChangeColor(colors) {

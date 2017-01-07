@@ -8,6 +8,7 @@ export default class OekakiTool extends React.Component {
   static propTypes = {
     handleEraser: React.PropTypes.func.isRequired,
     handlePencil: React.PropTypes.func.isRequired,
+    handleZoom: React.PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -17,7 +18,7 @@ export default class OekakiTool extends React.Component {
   }
 
   render () {
-    const { handleEraser, handlePencil } = this.props
+    const { handleEraser, handlePencil, handleZoom } = this.props
     const { selected } = this.state
     return (
       <div className={styles.tool}>
@@ -25,11 +26,23 @@ export default class OekakiTool extends React.Component {
           <MenuItem onClick={() => {
             handlePencil();
             this.setState({selected: 'pencil'})
-           }} selected={selected === 'pencil'} iconName='fa-pencil'></MenuItem>
+           }} selected={selected === 'pencil'} iconName='fa-pencil'>
+          </MenuItem>
           <MenuItem onClick={() => {
             handleEraser();
             this.setState({selected: 'eraser'})
-           }} selected={selected === 'eraser'} iconName='fa-eraser'></MenuItem>
+           }} selected={selected === 'eraser'} iconName='fa-eraser'>
+          </MenuItem>
+          <MenuItem onClick={() => {
+            handleZoom(true);
+            this.setState({selected: 'zoomIn'})
+           }} selected={selected === 'zoomIn'} iconName='fa-search-plus'>
+          </MenuItem>
+          <MenuItem onClick={() => {
+            handleZoom(false);
+            this.setState({selected: 'zoomOut'})
+           }} selected={selected === 'zoomOut'} iconName='fa-search-minus'>
+          </MenuItem>
         </ul>
       </div>
     )
@@ -49,7 +62,8 @@ class MenuItem extends React.Component {
           {[styles.selected]: selected}
         )}
         {...{ onClick }}>
-        <i className={classNames('fa', iconName, styles.icon)}></i>
+        <i className={classNames('fa', iconName, styles.icon)}>
+        </i>
         {this.props.children}
       </li>
     );

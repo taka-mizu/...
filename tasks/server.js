@@ -8,7 +8,8 @@ gulp.task('webserver', () => {
 	connect.server({
 		root: config.dest,
 		livereload: true,
-		port: 8888
+		host: process.env.HOST || 'localhost',
+		port: process.env.PORT || 8888
 	});
 });
 

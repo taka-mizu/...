@@ -135,7 +135,7 @@ export class OekakiCanvas extends React.Component {
 
 		oekaki.setDrawEvent()
 
-		if(window.location.search) {
+		if(localStorage['draw']) {
 			oekaki.changeHistory(JSON.parse(localStorage['draw']))
 			//oekaki.repeat({});
 		}

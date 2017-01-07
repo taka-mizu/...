@@ -1,0 +1,9 @@
+:root {
+    --base-color: #4d4d4d;
+    --header-height: 30px;
+    --ui-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    --ui-inset-box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.3);
+    --icon-color: #ccc;
+
+    --guide-width: 240px;
+}

@@ -16,7 +16,13 @@ export class Stage {
   }
 
   createNewLayer(color = '') {
-    this.changeLayers({color})
+    this.layers.splice(this.layerNum + 1, 0, {});
+    console.log(this.layers);
+    this.layerNum += 1
+    this.changeVisible({})
+    this.changeBlendMode({})
+    this.changeAlpha({})
+    this.layers[this.layerNum].ary = this.createStageAry(color)
 
     this.setLayer({layerNum: this.layerNum})
   }
@@ -69,14 +75,7 @@ export class Stage {
   }
 
   changeLayers({layers, color} = {}) {
-    if(layers) return this.layers = layers
-
-    this.layerNum += 1
-    this.layers[this.layerNum] = {}
-    this.changeVisible({})
-    this.changeBlendMode({})
-    this.changeAlpha({})
-    this.layers[this.layerNum].ary = this.createStageAry(color)
+    this.layers = layers
   }
 
   clearLayer(color) {

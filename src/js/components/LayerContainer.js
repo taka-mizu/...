@@ -7,7 +7,7 @@ import BlendMode from './BlendMode';
 import LayerOperation from './LayerOperation';
 
 // css
-import styles from '../../css/LayerContainer.css'
+import styles from '../../css/layerContainer.css'
 
 export default class LayerContainer extends React.Component {
 	static propTypes = {

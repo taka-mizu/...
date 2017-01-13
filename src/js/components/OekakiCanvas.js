@@ -50,6 +50,7 @@ export class OekakiCanvas extends React.Component {
 					oekaki={oekaki}
 					handleEraser={::this.handleEraser}
 					handlePencil={::this.handlePencil}
+					handleDropper={::this.handleDropper}
 					handleZoom={::this.handleZoom}
 				/>
 
@@ -208,6 +209,12 @@ export class OekakiCanvas extends React.Component {
 		oekaki.changeFillStyle({fillStyle: oekaki.color})
 	}
 
+	handleDropper() {
+		const oekaki = this.props.oekaki;
+		this.props.oekaki.dropperMode = true;
+		oekaki.changeFillStyle({fillStyle: oekaki.color})
+	}
+	
 	handleZoom(isIn) {
 		const stage = this.props.stage;
 		stage.changeSize({

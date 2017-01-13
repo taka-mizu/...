@@ -26,11 +26,11 @@ export class Oekaki {
     this.repeatSpeed = 10
     this.drawingFunction = drawingFunction
     this.endFunction = endFunction
+		this.dropperMode = false // 作成用 初期値はfalseにしておく
   }
 
   changeColor({color}) {
     this.color = color
-
   }
 
   changeFillStyle({fillStyle}) {
@@ -104,6 +104,8 @@ export class Oekaki {
     this.stage.clearAllLayer()
     this.load()
   }
+	
+	
 
   setDrawEvent() {
     const elTop = this.stage.$el.offset().top
@@ -115,6 +117,15 @@ export class Oekaki {
 
       const elTop = this.stage.$el.offset().top
       const elLeft = this.stage.$el.offset().left
+			
+			if (this.dropperMode) {
+				this.dropper({
+					x: touchEvent.pageX - elLeft,
+					y: touchEvent.pageY - elTop
+				})
+				return
+			}
+			
       this.changeDrawing(true)
       this.drawStart({
         x: touchEvent.pageX - elLeft,
@@ -165,4 +176,16 @@ export class Oekaki {
 
     if(this.drawingFunction) this.drawingFunction()
   }
+	
+	dropper({x,y}) {
+		this.changePoint({x, y})
+		this.changeStartPoint({x, y})
+		this.changeDrawPoint()
+
+		const { pointX, pointY } = this.getDrawPoint({})
+		const color = selectColor(this.stage.getLayerPxColors({pointX, pointY}))[2]
+		this.stage.ctx.fillStyle = color
+		this.color = color
+	}
+	
 }

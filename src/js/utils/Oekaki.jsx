@@ -4,12 +4,14 @@ import { selectColor } from './OekakiHelper'
 export class Oekaki {
   constructor({
       stage,
+      history,
       strokeStyle,
       color = '#000',
       drawingFunction,
       endFunction
     }) {
     this.stage = stage
+    this.history = history
 
     this.strokeStyle = strokeStyle
     this.color = color
@@ -21,10 +23,9 @@ export class Oekaki {
     this.pointX = 0
     this.pointY = 0
     this.isDrawing = false
-    this.history = []
     this.repeatSpeed = 10
-    this.drawingFunction = drawingFunction;
-    this.endFunction = endFunction;
+    this.drawingFunction = drawingFunction
+    this.endFunction = endFunction
   }
 
   changeColor({color}) {
@@ -50,10 +51,6 @@ export class Oekaki {
     this.y = y
   }
 
-  changeHistory(history) {
-    this.history = history
-  }
-
   changeDrawPoint() {
     const { pointX, pointY } = this.getDrawPoint({})
     this.pointX = pointX
@@ -71,21 +68,7 @@ export class Oekaki {
   }
 
   addHistory() {
-    const lastHistory = this.history[this.history.length - 1];
-    if(
-      this.history.length === 0 ||
-      lastHistory[0] !== this.stage.layerNum ||
-      lastHistory[1] !== this.pointX ||
-      lastHistory[2] !== this.pointY ||
-      lastHistory[3] !== this.fillStyle
-    ) {
-      this.history.push([
-        this.stage.layerNum,
-        this.pointX,
-        this.pointY,
-        this.fillStyle
-      ])
-    }
+    this.history.addDrawHistory({stage: this.stage, oekaki: this})
   }
 
   draw({
@@ -105,15 +88,6 @@ export class Oekaki {
     )
   };
 
-  save() {
-    const deflateLayers = deflate(JSON.stringify(this.stage.layers));
-    const history = JSON.stringify(this.history);
-
-    // window.location.search = JSON.stringify(this.history);
-    window.location.search = deflateLayers
-    localStorage['draw'] = history
-  }
-
   load(layers = this.stage.layers) {
     layers[0].ary.forEach((rows, pointY) => {
       rows.forEach((color, pointX) => {
@@ -124,33 +98,6 @@ export class Oekaki {
         })
       })
     })
-  }
-
-  repeat({
-    speed = this.repeatSpeed,
-    history = this.history
-  }) {
-    this.clear()
-
-    let count = 0;
-    for(let i = 0;i < history.length; i++) {
-      setTimeout(() => {
-        const [layerNum, pointX, pointY, fillStyle] = history[count];
-        this.stage.setLayer({layerNum})
-
-        count++;
-
-        this.stage.changeStagePxColor({
-          pointX,
-          pointY,
-          color: fillStyle
-        })
-
-        this.draw({pointX, pointY, fillStyle});
-
-        if(this.drawingFunction) this.drawingFunction()
-      }, speed * i);
-    }
   }
 
   clear() {

@@ -66,7 +66,7 @@ export default class DragItem extends React.Component {
 	}
 
 	componentDidMount(nextProps) {
-		const stage = new Stage(ReactDOM.findDOMNode(this.refs[`layer${this.props.id}`]))
+		const stage = new Stage({el: ReactDOM.findDOMNode(this.refs[`layer${this.props.id}`])})
 		stage.changePxSize({
 			pxWidth: 1,
 			pxHeight: 1,

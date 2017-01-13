@@ -1,3 +1,11 @@
+export const CHANGE_HISTORY = "CHANGE_HISTORY"
+export function changeHistory(history) {
+    return {
+        type : CHANGE_HISTORY,
+        history
+    }
+}
+
 export const CHANGE_STAGE = "CHANGE_STAGE"
 export function changeStage(stage) {
     return {

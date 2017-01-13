@@ -15,6 +15,7 @@ export default class LayerContainer extends React.Component {
 		handleBlendMode: React.PropTypes.func.isRequired,
 		handleChangeAlpha: React.PropTypes.func.isRequired,
 		handleChangeLayer: React.PropTypes.func.isRequired,
+		handleMoveLayer: React.PropTypes.func.isRequired,
 		handleChangeLayers: React.PropTypes.func.isRequired,
 		handleNewLayer: React.PropTypes.func.isRequired,
 		handleRemoveLayer: React.PropTypes.func.isRequired,
@@ -28,6 +29,7 @@ export default class LayerContainer extends React.Component {
 			handleBlendMode,
 			handleChangeAlpha,
 			handleChangeLayer,
+			handleMoveLayer,
 			handleChangeLayers,
 			handleNewLayer,
 			handleRemoveLayer,
@@ -53,6 +55,7 @@ export default class LayerContainer extends React.Component {
 					{...{
 						handleChangeVisible,
 						handleChangeLayer,
+						handleMoveLayer,
 						handleChangeLayers,
 						layers,
 						layerNum,

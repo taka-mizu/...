@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 // utils
+import { History } from '../utils/History'
 import { Stage } from '../utils/Stage'
 import { Oekaki } from '../utils/Oekaki'
 
@@ -73,6 +74,7 @@ export class OekakiCanvas extends React.Component {
 					handleChangeAlpha={::this.handleChangeAlpha}
 
 					handleChangeLayer={::this.handleChangeLayer}
+					handleMoveLayer={::this.handleMoveLayer}
 					handleChangeLayers={::this.handleChangeLayers}
 
 					handleNewLayer={::this.handleNewLayer}
@@ -90,11 +92,14 @@ export class OekakiCanvas extends React.Component {
 
 	componentDidMount() {
 
+
 		const $el = $(`.${styles.oekaki}`)
 		const $mini = $(`.${styles.mini}`)
 
-		const stage = new Stage($el)
-		const mini = new Stage($mini)
+		const history = new History({})
+
+		const stage = new Stage({el: $el, history})
+		const mini = new Stage({el: $mini})
 
 		mini.changePxSize({
 			pxWidth: 2,
@@ -120,6 +125,7 @@ export class OekakiCanvas extends React.Component {
 		})
 		const oekaki = new Oekaki({
 			stage,
+			history,
 			endFunction: () => {
 				mini.changeLayers({layers: stage.layers})
 
@@ -136,7 +142,7 @@ export class OekakiCanvas extends React.Component {
 		oekaki.setDrawEvent()
 
 		if(localStorage['draw']) {
-			oekaki.changeHistory(JSON.parse(localStorage['draw']))
+			history.changeHistory(JSON.parse(localStorage['draw']))
 			//oekaki.repeat({});
 		}
 
@@ -144,26 +150,33 @@ export class OekakiCanvas extends React.Component {
 			changeStage,
 			changeMini,
 			changeOekaki,
-			changeMiniOekaki
+			changeMiniOekaki,
+			changeHistory
 		} = this.props.OekakiCanvasActions
 		changeStage(stage)
 		changeMini(mini)
 		changeOekaki(oekaki)
 		changeMiniOekaki(miniOekaki)
+		changeHistory(history)
+		console.log(stage.layers);
 	}
 
+	handleMoveLayer(fromTo) {
+		this.props.stage.moveLayer(fromTo)
+	}
 	handleChangeLayers(layers) {
 		this.props.stage.changeLayers({layers})
 	}
 
 	handleReplay() {
-		this.props.oekaki.changeHistory(JSON.parse(localStorage['draw']))
-		this.props.oekaki.repeat({})
+		const { stage, oekaki } = this.props
+		this.props.history.changeHistory(JSON.parse(localStorage['draw']))
+		this.props.history.repeat({stage, oekaki})
 		// this.props.stage.setLayer({layerNum: parseInt(e.target.value)})
 	}
 
 	handleSave() {
-		this.props.oekaki.save()
+		this.props.history.save({stage: this.props.stage})
 	}
 
 	handleRemoveLayer(e) {
@@ -252,10 +265,10 @@ export class OekakiCanvas extends React.Component {
 
 
 function mapStateToProps(state) {
-	const { stage, mini, oekaki, miniOekaki } = state.OekakiCanvasActionsReducer;
+	const { stage, mini, oekaki, miniOekaki, history } = state.OekakiCanvasActionsReducer;
 	return {
 		OekakiCanvasActionsReducer: state.OekakiCanvasActionsReducer,
-		stage, mini, oekaki, miniOekaki
+		stage, mini, oekaki, miniOekaki, history
 	};
 }
 

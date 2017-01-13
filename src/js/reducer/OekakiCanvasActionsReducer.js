@@ -5,12 +5,17 @@ const initialState = {
   oekaki: {},
   mini: {},
   miniOekaki: {},
-  layers: []
+  layers: [],
+  history: []
 }
 
 export default function OekakiCanvasActionsReducer (state = initialState, action) {
   switch (action.type)
   {
+    case ActionTypes.CHANGE_HISTORY :
+      return Object.assign({}, state, {
+        history: action.history
+      })
     case ActionTypes.CHANGE_STAGE :
       return Object.assign({}, state, {
         stage: action.stage

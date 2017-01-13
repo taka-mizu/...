@@ -17,6 +17,7 @@ export default class Layers extends React.Component {
 		layerNum: React.PropTypes.number,
 		handleChangeVisible: React.PropTypes.func,
 		handleChangeLayer: React.PropTypes.func,
+		handleMoveLayer: React.PropTypes.func,
 		handleChangeLayers: React.PropTypes.func,
 		updateCanvas: React.PropTypes.func,
 	}
@@ -38,16 +39,11 @@ export default class Layers extends React.Component {
 								id={i}
 								layer={layer}
 								onDrop={(fromId, toId) => {
-									const toIndex = layers.findIndex((layer, j) => j === toId)
-									const fromIndex = layers.findIndex((layer, j) => j === fromId)
-									const toItem = layers[toIndex]
-									const fromItem = layers[fromIndex]
+									const to = layers.findIndex((layer, j) => j === toId)
+									const from = layers.findIndex((layer, j) => j === fromId)
 
-									layers.splice(toIndex - fromIndex > 0 ? toIndex + 1: toIndex, 0, fromItem)
-									layers.splice(toIndex - fromIndex < 0 ? fromIndex + 1 : fromIndex, 1)
-
-									this.props.handleChangeLayer(toIndex)
-									this.props.handleChangeLayers(layers)
+									this.props.handleMoveLayer({from, to})
+									this.props.handleChangeLayer(to)
 									this.props.updateCanvas()
 								}}
 							>

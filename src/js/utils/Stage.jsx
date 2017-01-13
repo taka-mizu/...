@@ -1,6 +1,7 @@
 export class Stage {
-  constructor($el) {
-    this.$el = $($el);
+  constructor({el, history}) {
+    this.history = history;
+    this.$el = $(el);
     this.pxWidth = 10
     this.pxHeight = 10
     this.width = 32
@@ -87,6 +88,18 @@ export class Stage {
     pointY
   }) {
     return this.layers[layerNum].ary[pointY][pointX]
+  }
+
+  moveLayer({from, to}, isSetHistory = true) {
+    const toItem = this.layers[to]
+    const fromItem = this.layers[from]
+
+    this.layers.splice(to - from > 0 ? to + 1: to, 0, fromItem)
+    this.layers.splice(to - from < 0 ? from + 1 : from, 1)
+
+    this.changeLayers({layers: this.layers})
+
+    if(isSetHistory) this.history.moveLayerHistory(from, to)
   }
 
   changeLayers({layers, color} = {}) {
